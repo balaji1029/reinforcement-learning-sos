@@ -14,3 +14,38 @@ report/main.bcf
 report/main.bbl
 report/main.aux
 .ipynb_checkpoints/abhilasha-mab-checkpoint.ipynb
+
+# LaTeX build files
+report/*.aux
+report/*.bbl
+report/*.blg
+report/*.brf
+report/*.fls
+report/*.log
+report/*.out
+report/*.fdb_latexmk
+report/*.synctex.gz
+report/*.toc
+report/*.nav
+report/*.snm
+report/*.vrb
+report/*.xdv
+report/*.bcf
+report/*.run.xml
+
+# Temporary files
+report/*.tmp
+report/*.bak
+report/*.backup
+report/*.sav
+report/*.dvi
+
+# Editors and OS-specific files
+report/.DS_Store
+report/Thumbs.db
+report/*~
+report/*.swp
+report/*.swo
+
+# Directory for latexmk
+report/latexmk/
