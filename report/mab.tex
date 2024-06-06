@@ -1,0 +1,95 @@
+\section{Multi-Armed Bandits (MAB)}
+
+\subsection{What is a Multi-Armed Bandit??}
+
+Multi-Armed Bandits are common in casinos and are one of the easily modelled games in Reinforcement Learning. The name "Multi-Armed Bandit" comes from the slot machines in casinos, also known as one-armed bandits. The slot machines have a lever (arm) the player pulls to play the game. The player can choose from multiple slot machines with a different reward distribution. The goal is to maximize the total reward by selecting the slot machine with the highest expected reward. The player faces a trade-off between exploring different slot machines to learn their reward distributions and exploiting the best-known slot machine to maximize the reward. This trade-off is known as the exploration-exploitation dilemma.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/mab.png}
+    \caption{A Slot Machine or an Armed Bandit}
+    \label{fig:mab}
+\end{figure}
+
+The Multi-Armed Bandit I studied is a simple version of the Reinforcement Learning problem, where an agent interacts with an environment by selecting one of the available actions (arms) at each time step.
+
+I chose a 10-armed bandit from \cite{sutton2018reinforcement}, where the mean of the rewards given by the bandit was randomly selected over a constant distribution over a $[-2,2)$ range. The bandits give a reward chosen from a normal distribution with a mean equal to the mean of the bandit and a standard deviation of $1$. The agent aims to maximize the total reward by selecting the bandit with the highest expected reward.
+
+\subsection{Agent Implementation}
+
+I implemented the agent using the different algorithms given in~\cite{sutton2018reinforcement}. The implementation in all of these algorithms included storing an array of action values, which are estimates of the expected rewards of each bandit. The agent selects the action with the highest action value to \textit{exploit}, the best-known bandit, or selects a random action to \textit{explore} other bandits. The agent updates the action values based on the rewards received from the environment.
+
+The updation of the action values is different across different algorithms.
+
+\subsection{Algorithms}
+
+\subsubsection{Greedy Algorithm}
+
+The Greedy Algorithm is the simplest Algorithm for solving the Multi-Armed Bandit problem. The agent keeps track of the action values for each bandit and selects the bandit with the highest action value at each time step. The agent \textit{exploits} the best-known bandit by choosing the action with the highest action value.
+
+The action values of the bandits, represented by $q_{\ast}$, are estimated by the agent using the sample average method to get an estimate, represented by $Q_t$. The action value of a bandit $a$ at time step $t$ is updated using the following formula:
+\[q_\ast\doteq \mathds{E} [R_t|A_t=a]\]
+\[Q_t(a)\doteq \frac{\sum_{i=1}^{t-1} R_i \cdot \mathds{1}_{A_i=a}}{\sum_{i=1}^{t-1} \mathds{1}_{A_i=a}}\]
+
+where $R_t$ is the reward received by the agent at time step $t$, $A_t$ is the action selected by the agent at time step $t$, and $\mathds{1}_{A_i=a}$ is an indicator function that is $1$ if $A_i=a$ and $0$ otherwise.
+
+In the greedy algorithm, the agent always selects the bandit with the highest action value. So,
+
+\[A_t \doteq \argmax_{a} Q_t(a)\]
+
+This definition of $Q_t$ lets us define it recursively as follows:
+\[Q_{t+1} = Q_t + \frac{1}{n}[R_t - Q_t]\]
+
+where $n$ is the number of times the action $a$ has been selected.
+
+\subsubsection{Exploration-Exploitation Dilemma}
+
+The Greedy Algorithm has a drawback in that it always selects the bandit with the highest action value, which can lead to suboptimal performance. The agent may not explore other bandits to learn their reward distributions, which can result in a lower total reward.
+
+This can be overcome by choosing a random bandit every time with equal probability to explore the bandits. This ensures the agent explores all the bandits and learns their reward distributions. But the reward is highly distributed, so the agent may be unable to exploit the best bandit.
+
+This is the Exploration-Exploitation Dilemma in the Multi-Armed Bandit problem. This can be overcome by choosing the perfect ratio of exploration and exploitation.
+
+\subsubsection{$\epsilon$-Greedy Algorithm}
+
+The $\epsilon$-Greedy Algorithm is a simple solution to the Exploration-Exploitation Dilemma. The agent selects the best-known bandit with probability $1-\epsilon$ and selects a random bandit with probability $\epsilon$. The agent \textit{exploits} the best-known bandit with probability $1-\epsilon$ and \textit{explores} other bandits with probability $\epsilon$\footnote{Assuming there are $k$ bandits, the probability of selecting a bandit $a$ at time step $t$ is given by:
+\[\pi(a_t=a|S_t) = \begin{cases}
+    1-\epsilon + \frac{\epsilon}{k} & \text{if } a = \argmax_{a} Q_t(a) \\ \frac{\epsilon}{k} & \text{otherwise}
+\end{cases}\]}.
+
+The action value of a bandit $a$ at time step $t$ is updated using the following formula:
+\[Q_{t+1}(a) = Q_t(a) + \frac{1}{n}[R_t - Q_t(a)]\]
+
+where $n$ is the number of times the action $a$ has been selected.
+
+The value of $\epsilon$ is a hyperparameter that controls the exploration and exploitation trade-off. A higher value of $\epsilon$ encourages more exploration, while a lower value of $\epsilon$ encourages more exploitation.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{images/compare-epsilon-greedy.png}
+    \caption{The $\epsilon$-Greedy Algorithm}
+    \label{fig:epsilon_greedy}
+\end{figure}
+
+The \ref{fig:epsilon_greedy} shows the performance of the $\epsilon$-Greedy Algorithm with different values of $\epsilon$. The performance of the algorithm is measured by the average reward over time. The algorithm with $\epsilon=0.1$ performs better than the algorithm with $\epsilon=0.01$ and $\epsilon=0$.
+
+It is obvious that the greedy algorithm grows faster than the other algorithm at the beginning but the $\epsilon$-greedy algorithm with $\epsilon=0.1$ performs better than the greedy algorithm in the long run. The $\epsilon=0.01$ algorithm is closer to the greedy algorithm, but it performs better than the greedy algorithm in the long run, it even performs better than the $\epsilon=0.1$ algorithm in the long run, but it grows slower than the $\epsilon=0.1$ algorithm.
+
+Completely random selection of bandits ($\epsilon=0$) performs the worst among all the algorithms. The agent does not exploit the best-known bandit and spends most of the time exploring other bandits, resulting in a lower total reward.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.49\linewidth]{images/3d-compare-epsilon-greedy.png}
+    \includegraphics[width=0.49\linewidth]{images/compare-epsilons-greedy.png}
+    \caption{Comparison of epsilons in the $\epsilon$-Greedy Algorithm}
+    \label{fig:epsilon_greedy_optimistic}
+\end{figure}
+
+You can see that the maximum of the reward is at $\epsilon=0.08$ and then decreases.
+
+\subsubsection{Various Other Step-sizes}
+
+The $Q_t$ updation formula can be generalized to include a step-size parameter $\alpha$ to control the rate at which the action values are updated. The action value of a bandit $a$ at time step $t$ is updated using the following formula:
+\[Q_{t+1}(a) = Q_t(a) + \alpha[R_t - Q_t(a)]\]
+
+where $\alpha$ is the step-size parameter that controls the rate at which the action values are updated. A higher value of $\alpha$ updates the action values faster, while a lower value of $\alpha$ updates the action values slower.

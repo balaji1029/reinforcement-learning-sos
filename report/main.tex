@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{makeidx}
+\usepackage{biblatex}
+\usepackage{dsfont}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{graphicx} % Required for inserting images
+
+\graphicspath{./images/}
+\bibliography{references}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\makeindex
+
+\title{\textbf{Reinforcement Learning} \\ SoS Report}
+\author{Balaji Karedla}
+\date{June 2024}
+
+\hypersetup{
+    colorlinks=true,       % Set to true to use colored links instead of boxes
+    linkcolor=blue,        % Color for internal links (sections, table of contents)
+    filecolor=magenta,     % Color for file links
+    urlcolor=cyan,         % Color for external links
+    citecolor=blue,        % Color for citation links
+    linkbordercolor={0 0 0}, % Set link border color to black (effectively hides the box)
+    pdfborder={0 0 0}      % Remove link borders (set to 0 0 0 to remove all borders)
+}
+
+\begin{document}
+
+\maketitle
+
+\pagenumbering{roman}
+
+\tableofcontents
+
+\newpage
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\lhead{Reinforcement Learning}
+\rhead{Balaji Karedla}
+\pagenumbering{arabic}
+
+\input{intro.tex}
+\input{mab.tex}
+\input{mdp.tex}
+
+\printbibliography
+
+\printindex
+
+\end{document}
