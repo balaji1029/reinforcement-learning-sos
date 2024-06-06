@@ -21,9 +21,7 @@ I implemented the agent using the different algorithms given in~\cite{sutton2018
 
 The updation of the action values is different across different algorithms.
 
-\subsection{Algorithms}
-
-\subsubsection{Greedy Algorithm}
+\subsection{Greedy Algorithm}
 
 The Greedy Algorithm is the simplest Algorithm for solving the Multi-Armed Bandit problem. The agent keeps track of the action values for each bandit and selects the bandit with the highest action value at each time step. The agent \textit{exploits} the best-known bandit by choosing the action with the highest action value.
 
@@ -42,7 +40,7 @@ This definition of $Q_t$ lets us define it recursively as follows:
 
 where $n$ is the number of times the action $a$ has been selected.
 
-\subsubsection{Exploration-Exploitation Dilemma}
+\subsection{Exploration-Exploitation Dilemma}
 
 The Greedy Algorithm has a drawback in that it always selects the bandit with the highest action value, which can lead to suboptimal performance. The agent may not explore other bandits to learn their reward distributions, which can result in a lower total reward.
 
@@ -50,7 +48,7 @@ This can be overcome by choosing a random bandit every time with equal probabili
 
 This is the Exploration-Exploitation Dilemma in the Multi-Armed Bandit problem. This can be overcome by choosing the perfect ratio of exploration and exploitation.
 
-\subsubsection{$\epsilon$-Greedy Algorithm}
+\subsection{$\epsilon$-Greedy Algorithm}
 
 The $\epsilon$-Greedy Algorithm is a simple solution to the Exploration-Exploitation Dilemma. The agent selects the best-known bandit with probability $1-\epsilon$ and selects a random bandit with probability $\epsilon$. The agent \textit{exploits} the best-known bandit with probability $1-\epsilon$ and \textit{explores} other bandits with probability $\epsilon$\footnote{Assuming there are $k$ bandits, the probability of selecting a bandit $a$ at time step $t$ is given by:
 \[\pi(a_t=a|S_t) = \begin{cases}
@@ -85,11 +83,40 @@ Completely random selection of bandits ($\epsilon=0$) performs the worst among a
     \label{fig:epsilon_greedy_optimistic}
 \end{figure}
 
-You can see that the maximum of the reward is at $\epsilon=0.08$ and then decreases.
+The maximum of the reward is at $\epsilon=0.08$ and then decreases.
 
-\subsubsection{Various Other Step-sizes}
+\subsection{Tracking a Non-Stationary Problem}
 
-The $Q_t$ updation formula can be generalized to include a step-size parameter $\alpha$ to control the rate at which the action values are updated. The action value of a bandit $a$ at time step $t$ is updated using the following formula:
-\[Q_{t+1}(a) = Q_t(a) + \alpha[R_t - Q_t(a)]\]
+The Multi-Armed Bandit problem can be made more challenging by introducing non-stationary rewards. In the non-stationary problem, the reward distributions of the bandits change over time. The mean of the rewards given by the bandits is updated at each time step by adding a small random value to the mean.
 
-where $\alpha$ is the step-size parameter that controls the rate at which the action values are updated. A higher value of $\alpha$ updates the action values faster, while a lower value of $\alpha$ updates the action values slower.
+The non-stationary problem is more challenging because the agent has to adapt to the changing reward distributions to maximize the total reward. The agent has to balance exploration and exploitation to learn the new reward distributions and exploit the best-known bandit.
+
+To solve the non-stationary problem, the agent has to use a different approach to update the action values. The agent has to give more weight to recent rewards to adapt to the changing reward distributions.
+
+One of the most popular ways to do it is to use a constant step-size parameter $\alpha$ to update the action values. The action value of a bandit $a$ at time step $t$ is updated using the following formula:
+
+\begin{equation}
+    Q_{n+1} \doteq Q_n + \alpha[R_n - Q_n]
+\end{equation}
+
+The $Q_{n+1}$ can be written in terms of all the previous rewards and the initial estimate of the action value with:
+\begin{align*}
+    Q_{n+1} &= Q_n + \alpha[R_n - Q_n] \\
+    &= \alpha R_n + (1-\alpha)Q_n \\
+    &= \alpha R_n + (1-\alpha)[\alpha R_{n-1} + (1-\alpha)Q_{n-1}] \\
+    &= \alpha R_n + (1-\alpha)\alpha R_{n-1} + (1-\alpha)^2 Q_{n-1} \\
+    &= \alpha R_n + (1-\alpha)\alpha R_{n-1} + (1-\alpha)^2\alpha R_{n-2} + \dots + (1-\alpha)^{n-1}\alpha R_1 + (1-\alpha)^nQ_1 \\
+    &= (1-\alpha)^nQ_1 + \sum_{i=1}^{n}\alpha(1-\alpha)^{n-i}R_i
+\end{align*}
+
+This is called a weighted average because the sum of the weights is $(1-\alpha)^n+\sum_{i=1}^{n}\alpha(1-\alpha)^{n-i}=1$. The quantity $(1-\alpha)$ is less than $1$, and thus the weight given to Ri decreases as the number of intervening rewards increases. In fact, the weight decays exponentially according to the exponent on $1-\alpha$. Accordingly, this is sometimes called an \textit{exponential recency-weighted average}.
+
+Sometimes it is convenient to vary the step-size parameter from step to step. Let $\alpha_n(a)$ denote the step-size parameter used to process the reward received after the $n$th selection of action a. As we have noted, the choice $\alpha_n(a) = \frac{1}{n}$ results in the sample-average method, which is guaranteed to converge to the true action values by the law of large numbers. But of course convergence is not guaranteed for all choices of the sequence $\left\{\alpha_n(a)\right\}$. A well-known result in stochastic approximation theory gives us the conditions required to assure convergence with probability 1:
+
+\begin{equation}
+    \sum_{n=1}^{\infty}\alpha_n(a) = \infty \quad\quad \text{and} \quad\quad \sum_{n=1}^{\infty}\alpha_n^2(a) < \infty\\
+\end{equation}
+
+Or more formally, $\sum_{n=1}^{\infty}$ diverges and $\sum_{n=1}^{\infty}$ converges. The first condition is required to guarantee that the steps are large enough to eventually overcome any initial conditions or random fluctuations. The second condition guarantees that eventually the steps become small enough to assure convergence.
+
+\subsection{Optimistic Initial Values}
