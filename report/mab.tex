@@ -120,3 +120,9 @@ Sometimes it is convenient to vary the step-size parameter from step to step. Le
 Or more formally, $\sum_{n=1}^{\infty}$ diverges and $\sum_{n=1}^{\infty}$ converges. The first condition is required to guarantee that the steps are large enough to eventually overcome any initial conditions or random fluctuations. The second condition guarantees that eventually the steps become small enough to assure convergence.
 
 \subsection{Optimistic Initial Values}
+
+The Greedy Algorithm and the $\epsilon$-Greedy Algorithm have a drawback in that they may get stuck in a suboptimal bandit. The agent may not explore other bandits to learn their reward distributions, which can result in a lower total reward.
+
+This can be overcome by using optimistic initial values for the action values. The agent initializes the action values with a high value to encourage exploration. The agent explores other bandits to learn their reward distributions and exploits the best-known bandit to maximize the total reward.
+
+This 
