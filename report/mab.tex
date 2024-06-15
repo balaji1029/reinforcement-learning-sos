@@ -125,4 +125,43 @@ The Greedy Algorithm and the $\epsilon$-Greedy Algorithm have a drawback in that
 
 This can be overcome by using optimistic initial values for the action values. The agent initializes the action values with a high value to encourage exploration. The agent explores other bandits to learn their reward distributions and exploits the best-known bandit to maximize the total reward.
 
-This 
+The action values of the bandits are initialized with a high value, such as $10$, to encourage exploration. The agent selects the bandit with the highest action value at each time step to \textit{exploit} the best-known bandit or selects a random bandit to \textit{explore} other bandits.
+
+As can be seen in the Figure~\ref{fig:optimistic_greedy}, the optimistic initial values algorithm performs better than the greedy algorithm in the long run. The agent explores other bandits to learn their reward distributions and exploits the best-known bandit to maximize the total reward.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{images/optimistic.png}
+    \caption{Comparison of Optimistic Initial Values}
+    \label{fig:optimistic_greedy}
+\end{figure}
+
+\subsection{Upper-Confidence-Bound (UCB) Action Selection}
+
+Exploration is needed because the agent is uncertain about the reward distributions of the bandits. The agent has to explore other bandits to learn their reward distributions and exploit the best-known bandit to maximize the total reward. The agent has to balance exploration and exploitation to maximize the total reward. The agent has to choose the perfect ratio of exploration and exploitation.
+
+The Upper-Confidence-Bound (UCB) Action Selection Algorithm is one of the many solutions to the Exploration-Exploitation Dilemma. The agent selects the bandit with the highest upper confidence bound at each time step. The agent \textit{exploits} the best-known bandit by choosing the action with the highest upper confidence bound.
+
+The action value of a bandit $a$ at time step $t$ is updated using the following formula:
+
+\begin{equation}
+    A_t \doteq \argmax_{a} \left[Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}}\right]
+\end{equation}
+
+where $N_t(a)$ is the number of times the action $a$ has been selected prior to time $t$, and $c$ is a hyperparameter that controls the exploration and exploitation trade-off. A higher value of $c$ encourages more exploration, while a lower value of $c$ encourages more exploitation.
+plt.savefig('report/images/ucb.png')
+
+As can be seen in the Figure~\ref{fig:ucb}, the UCB Algorithm performs better than the Greedy Algorithm and the $\epsilon$-Greedy Algorithm. The agent explores other bandits to learn their reward distributions and exploits the best-known bandit to maximize the total reward.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{images/ucb.png}
+    \caption{The UCB Algorithm}
+    \label{fig:ucb}
+\end{figure}
+
+\subsection{Gradient Bandit Algorithm}
+
+\subsection{Associative Search (Contextual Bandits)}
+
+I skipped the above topics$\dots$ :P 
