@@ -1,0 +1,41 @@
+\section{Monte Carlo Methods}
+
+Monte Carlo methods are a class of algorithms that rely on random sampling to estimate the value function. These methods assume that the sample is huge enough to provide a good estimate on the value of the state.
+
+This method is better than the Dynamic Programming methods when the model of the environment is not known. And, the Monte Carlo techniques update the value function after the episode ends, unlike the Dynamic Programming methods which update the value function after each step.
+
+\subsection{Monte Carlo Prediction}
+
+The Monte Carlo Prediction is the process of estimating the value function of a policy by averaging the returns observed after visits to the stare. 
+
+The Monte Carlo Predictions can be done in two ways:
+\begin{itemize}
+    \item \textbf{First-visit Monte Carlo}: The value of a state is the average of the returns following the first time the state is visited in an episode.
+    \item \textbf{Every-visit Monte Carlo:} The value of a state is the average of the returns following every visit to the state in an episode.
+\end{itemize}
+
+The algorithm for First-visit Monte Carlo is as follows:
+
+\begin{algorithm}
+    \caption{First-visit Monte Carlo Prediction, for estimating V $\approx v_\pi$}
+    \begin{algorithmic}
+        \State Input: a policy $\pi$ to be evaluated
+    \end{algorithmic}
+    \begin{algorithmic}
+        \State Initialize:
+        \State $V(s) \in \mathbb{R}$, arbitrarily, for all $s\in\mathcal{S}$
+        \State $Returns(s) \leftarrow$ an empty list, for all $s\in\mathcal{S}$
+    \end{algorithmic}
+    \begin{algorithmic}
+        \While{True (for each episode)}
+            \State Generate an episode following $\pi$: $S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T-1}, A_{T-1}, R_T$
+            \State $G \leftarrow 0$
+            \State For each step of the episode $t=T-1, T-2, \dots, 0$:
+            \State $G \leftarrow \gamma G + R_{t+1}$
+            \If{$S_t$ not in $S_0, S_1, \dots, S_{t-1}$}
+                \State Append $G$ to $Returns(S_t)$
+                \State $V(S_t) \leftarrow \text{average}(Returns(S_t))$
+            \EndIf
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
