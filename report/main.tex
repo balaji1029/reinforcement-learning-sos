@@ -5,7 +5,10 @@
 \usepackage{biblatex}
 \usepackage{dsfont}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{fancyhdr}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage{graphicx} % Required for inserting images
 
 \graphicspath{./images/}
@@ -52,6 +55,14 @@
 \input{mab.tex}
 \input{mdp.tex}
 \input{dp.tex}
+
+% \begin{align*}
+%     P(X_i|X_{\sim i}) &= \frac{P(X_i,X_{\sim i})}{P(X_{\sim i})} \\
+%     &= \frac{\exp(-\sum_{c\in A_i}{V_c(x_c)}-\sum_{c \notin A_i}{V_c(x_c)})}{\int \exp(-\sum_{c\in A_i}{V_c(x_c)}-\sum_{c \notin A_i}{V_c(x_c)})dX_i} \\
+%     &= \frac{\exp(-\sum_{c\in A_i}{V_c(x_c)\cdot\exp(-\sum_{c \notin A_i}{V_c(x_c)})})}{\exp(-\sum_{c\notin A_i}{V_c(x_c)})\cdot\int\exp(\sum_{c\in A_i}{V_c(x_c)})dX_i} \\
+%     &= \frac{\exp(-\sum_{c\in A_i}{V_c(x_c)})}{\int\exp(\sum_{c\in A_i}{V_c(x_c)})dX_i} \\
+%     &= P(X_i|X_{N_i})
+% \end{align*}
 
 \printbibliography
 
