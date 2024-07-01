@@ -15,4 +15,9 @@ The problems I've tried are
 - Jack's Car Rental Problem
 - Gambler's Problem
 
+Problems I want to work on
+- Tic-Tac-Toe
+- 15-Puzzle
+- Pawnscape (if time permits)
+
 MidTerm Report done!!! Gotta work on Blackjack and Soap Bubble
